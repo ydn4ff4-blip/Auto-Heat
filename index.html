@@ -1,0 +1,117 @@
+
+<!doctype html>
+<html lang="id">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, viewport-fit=cover">
+  <title>Heat Pro — AutoEnd v1</title>
+  <meta name="theme-color" content="#0b0f14">
+  <link rel="manifest" href="manifest.webmanifest">
+  <link rel="icon" href="icons/icon-192x192.png">
+  <link rel="apple-touch-icon" href="icons/icon-192x192.png">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <header class="topbar">
+    <div class="left">
+      <h1>Heat Pro — AutoEnd v1</h1>
+      <span id="status" class="pill s-ok">OK</span>
+    </div>
+    <div class="right">
+      <button id="btnLock" class="icon" title="Kunci mini-bar">🔓</button>
+      <button id="btnSettings" class="icon" title="Pengaturan">⚙️</button>
+    </div>
+  </header>
+
+  <main class="wrap">
+    <section class="card">
+      <div class="row stats">
+        <span>Heat: <b id="heat">0</b></span>
+        <span>Dead: <b id="dead">0</b></span>
+        <span>BB: <b id="bb">0</b></span>
+        <span>DeadStreak: <b id="ds">0</b></span>
+        <span>Spin#: <b id="sn">0</b></span>
+      </div>
+
+      <div class="row">
+        <button id="btnUndo" class="btn ghost">↶ Undo</button>
+        <button id="btnReset" class="btn ghost">Reset</button>
+        <button id="btnExportCSV" class="btn">Export CSV</button>
+        <button id="btnExportJSON" class="btn">Export JSON</button>
+      </div>
+    </section>
+
+    <section class="card">
+      <h3>Ringkasan 10 spin terakhir</h3>
+      <div class="grid3 quick">
+        <div><div class="muted">Win-rate</div><div id="qWin">0%</div></div>
+        <div><div class="muted">Avg Tumble</div><div id="qT">0.0</div></div>
+        <div><div class="muted">Scatter freq</div><div id="qS">0%</div></div>
+      </div>
+    </section>
+
+    <section class="card">
+      <h3>Riwayat</h3>
+      <div id="log" class="log"></div>
+    </section>
+  </main>
+
+  <!-- Mini-bar melayang -->
+  <div id="mini" class="mini s-ok">
+    <div class="dragArea" id="miniDrag">⋮⋮</div>
+    <button class="miniBtn" id="mbT">+T</button>
+    <button class="miniBtn" id="mbS">+S</button>
+    <button class="miniBtn" id="mbUndo">↶</button>
+  </div>
+
+  <!-- Panel Pengaturan -->
+  <aside id="settings" class="sheet">
+    <div class="sheetInner">
+      <div class="sheetHead">
+        <h2>Pengaturan</h2>
+        <button id="closeSettings" class="icon">✖</button>
+      </div>
+
+      <div class="grid2 cfg">
+        <label>WARM ≥ <input id="twarm" type="number" value="4" min="1" max="50"></label>
+        <label>HOT ≥ <input id="thot" type="number" value="7" min="1" max="50"></label>
+        <label>COLD Dead ≥ <input id="tcold" type="number" value="12" min="1" max="100"></label>
+        <label>BB min ≥ <input id="tbb" type="number" value="2" min="2" max="20"></label>
+        <label>WIN jika Tumble ≥ <input id="twin" type="number" value="1" min="0" max="10"></label>
+        <label>Tumble besar ≥ <input id="ttbig" type="number" value="5" min="2" max="50"></label>
+        <label>Auto-End idle (ms) <input id="tidle" type="number" value="1200" min="400" max="4000"></label>
+        <label class="row"><input id="autoDead" type="checkbox"> Auto-dead jika idle lama (eksperimen)</label>
+        <label class="row"><input id="haptic" type="checkbox" checked> Getar/Beep</label>
+        <label>Transparansi mini-bar <input id="miniAlpha" type="range" min="20" max="100" value="92"></label>
+        <label>Posisi mini-bar
+          <select id="miniSide"><option value="right">Kanan</option><option value="left">Kiri</option></select>
+        </label>
+      </div>
+
+      <div class="profiles">
+        <h3>Profiles</h3>
+        <div class="row">
+          <select id="profileSel">
+            <option value="Generic">Generic</option>
+            <option value="Zeus">Zeus</option>
+            <option value="LuckyNeko">Lucky Neko</option>
+          </select>
+          <button id="loadProfile" class="btn">Load</button>
+          <button id="saveProfile" class="btn">Save</button>
+        </div>
+      </div>
+    </div>
+  </aside>
+
+  <audio id="beep" preload="auto">
+    <source src="data:audio/wav;base64,UklGRiQAAABXQVZFZm10 IBAAAAABAAEAESsAACJWAAACABYAAAClAAAA" type="audio/wav">
+  </audio>
+
+  <script src="main.js"></script>
+  <script>
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', () => navigator.serviceWorker.register('./sw.js'));
+    }
+  </script>
+</body>
+</html>
